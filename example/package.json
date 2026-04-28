@@ -1,0 +1,19 @@
+{
+  "name": "truffle-safeheron-example",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Example Truffle project using @safeheron/truffle-safeheron",
+  "scripts": {
+    "start": "node scripts/run.js",
+    "migrate": "truffle migrate --network sepolia",
+    "interact": "truffle exec --network sepolia scripts/interact.js"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2",
+    "@safeheron/truffle-safeheron": "file:.."
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5",
+    "truffle": "^5.11.5"
+  }
+}

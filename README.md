@@ -50,13 +50,17 @@ module.exports = {
 };
 ```
 
+## Example
+
+A complete, runnable Truffle project lives in [example/](./example). It demonstrates an end-to-end Sepolia deployment with environment-driven configuration. See [example/README.md](./example/README.md) for setup steps.
+
 ## QA
 
 1. How to get `web3WalletAccountKey` and `web3WalletEVMAddress` ?
 
-Please open [Safeheron Web Console](https://www.safeheron.com/console/wallet), choose an Web3 wallet which you want to use, 
+Please open [Safeheron Web Console](https://console.safeheron.com/wallet), choose an Web3 wallet which you want to use, 
 click to go to wallet detail page,
-then you will see a link like https://www.safeheron.com/console/wallet/account58xxxxcbf34_web3 in your browser address bar,
+then you will see a link like https://console.safeheron.com/wallet/account58xxxxcbf34_web3 in your browser address bar,
 the `account58xxxxcbf34` string without `_web3` suffix is your web3 account key. 
 And you can also copy your Web3 EVM address at the top of this page.
 
