@@ -79,6 +79,14 @@ This executes [scripts/interact.js](scripts/interact.js) via `truffle exec --net
 
 Each write triggers a Safeheron mobile-app approval. Self-transfer / self-approve still exercises the full signing path, so no extra configuration is needed beyond the deployment credentials.
 
+To exercise the legacy (non-EIP-1559) gas path in the plugin, run:
+
+```bash
+npm run interact:legacy
+```
+
+This calls [scripts/interact-legacy.js](scripts/interact-legacy.js), which passes `gasPrice` explicitly so the transaction is signed as a type 0 tx. Useful for verifying both gas branches in `SafeheronProvider.createTransaction` end-to-end.
+
 ## Files
 
 | Path | Purpose |
@@ -89,3 +97,4 @@ Each write triggers a Safeheron mobile-app approval. Self-transfer / self-approv
 | `.env.example` | Environment variable template (copy to `.env`) |
 | `scripts/run.js` | One-shot setup + migrate driver invoked by `npm start` |
 | `scripts/interact.js` | Post-deploy demo of non-deployment contract calls (`npm run interact`) |
+| `scripts/interact-legacy.js` | Same as `interact.js` but forces a legacy (type 0) gas tx (`npm run interact:legacy`) |

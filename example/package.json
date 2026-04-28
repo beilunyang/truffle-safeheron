@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node scripts/run.js",
     "migrate": "truffle migrate --network sepolia",
-    "interact": "truffle exec --network sepolia scripts/interact.js"
+    "interact": "truffle exec --network sepolia scripts/interact.js",
+    "interact:legacy": "truffle exec --network sepolia scripts/interact-legacy.js"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.2",
