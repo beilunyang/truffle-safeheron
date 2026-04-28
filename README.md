@@ -14,29 +14,28 @@ npm install @safeheron/truffle-safeheron
 
 ## Usage
 
-Configure your `truffle-config.js` in your truffle project.
+Configure your `truffle-config.js` in your truffle project. Load every secret
+from environment variables — never paste an RSA private key (or any other
+credential) into a config file that is tracked by git.
 
 ```javascript
-const SafeheronProvider = require("@safeheron/truffle-safehreon");
+require("dotenv").config();
+const SafeheronProvider = require("@safeheron/truffle-safeheron");
 
 module.exports = {
   // ...
   networks: {
     sepolia: {
-      provider: () => new SafeheronProvider('https://sepolia.infura.io/v3/8026****2fcb', {
-        baseUrl: '<Safeheron Open API Url>',
-        apiKey: '3faeb3****da25d2',
-        // Here are two configuration options:
-        // 1. Configure the path to the private key file, for example: file:/path/to/your/private/key/file.pem
-        // 2. Configure the private key content in string format, for example: -----BEGIN PRIVATE KEY-----\nMIIJQgIBADANBgkqhkiG****ICAQDidDHYV73U4cub\n-----END PUBLIC KEY-----
-        rsaPrivateKey: "-----BEGIN PRIVATE KEY-----\nMIIJQgIBADANBgkqh****mCAruusbobkuJ3rB6h\n-----END PRIVATE KEY-----",
-        // You can get safeheronRsaPublicKey from Safeheron Web Console. Here are two configuration options:
-        // 1. Save safeheronRsaPublicKey to a file and configure the path to the file, for example: file:/path/to/safeheron/public/key/file.pem
-        // 2. Directly paste the public key that you copied from the web console, for example: MIICIjANBgkqhki****8eUQV63wRS0CAwEAAQ==
-        safeheronRsaPublicKey: "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0B****S0CAwEAAQ==\n-----END PUBLIC KEY-----",
+      provider: () => new SafeheronProvider(process.env.SEPOLIA_RPC_URL, {
+        baseUrl: process.env.SAFEHERON_BASE_URL,
+        apiKey: process.env.SAFEHERON_API_KEY,
+        // Load RSA keys from files outside the working tree. The `file:`
+        // prefix tells the SDK to read the PEM from disk.
+        rsaPrivateKey: `file:${process.env.SAFEHERON_RSA_PRIVATE_KEY_PATH}`,
+        safeheronRsaPublicKey: `file:${process.env.SAFEHERON_RSA_PUBLIC_KEY_PATH}`,
         requestTimeout: 10000,
-        web3WalletAccountKey: "accoun****8e74f",
-        web3WalletEVMAddress: "0x426e****14DDE"
+        web3WalletAccountKey: process.env.SAFEHERON_WEB3_ACCOUNT_KEY,
+        web3WalletEVMAddress: process.env.SAFEHERON_WEB3_EVM_ADDRESS,
       }),
       network_id: "11155111",
       networkCheckTimeout: 5000,
@@ -45,10 +44,16 @@ module.exports = {
     }
   },
 
-  // ... 
-  
+  // ...
+
 };
 ```
+
+`rsaPrivateKey` and `safeheronRsaPublicKey` also accept a raw PEM string
+(`-----BEGIN ...-----\n...\n-----END ...-----`) for ad-hoc local debugging.
+Do not use that form in any file that may be committed — paste a PEM into a
+tracked config and it lives in git history forever. For production, prefer a
+real secrets manager over `.env`.
 
 ## Example
 
