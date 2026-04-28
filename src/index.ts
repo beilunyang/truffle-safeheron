@@ -29,6 +29,8 @@ const singletonNonceSubProvider = new NonceSubProvider();
 
 const PLUGIN_NAME = "truffle-safeheron";
 
+const hexToWei = (hex: string): string => BigInt(hex).toString(10);
+
 class SafeheronProvider {
   private initialized: Promise<void>;
   public engine: Web3ProviderEngine;
@@ -151,20 +153,24 @@ class SafeheronProvider {
 
   private async createTransaction(txData: any): Promise<string> {
     const {data, gas, maxFeePerGas, maxPriorityFeePerGas, nonce, value, gasPrice, to} = txData
+    const transaction: CreateWeb3EthSignTransactionRequest['transaction'] = {
+      to,
+      value: typeof value !== 'undefined' ? hexToWei(value) : '0',
+      chainId: this.chainId!,
+      gasLimit: parseInt(gas, 16),
+      nonce: parseInt(nonce, 16),
+      data: data,
+    };
+    if (typeof maxFeePerGas !== 'undefined' && typeof maxPriorityFeePerGas !== 'undefined') {
+      transaction.maxFeePerGas = hexToWei(maxFeePerGas);
+      transaction.maxPriorityFeePerGas = hexToWei(maxPriorityFeePerGas);
+    } else {
+      transaction.gasPrice = hexToWei(gasPrice);
+    }
     const request: CreateWeb3EthSignTransactionRequest = {
       customerRefId: uuid(),
       accountKey: this._web3WalletAccountKey,
-      transaction: {
-        value: typeof value !== 'undefined' ? parseInt(value, 16).toString() : '0',
-        chainId: this.chainId!,
-        gasLimit: parseInt(gas, 16),
-        maxPriorityFeePerGas: parseInt(maxPriorityFeePerGas, 16).toString(),
-        maxFeePerGas: parseInt(maxFeePerGas, 16).toString(),
-        gasPrice: parseInt(gasPrice, 16).toString(),
-        nonce: parseInt(nonce, 16),
-        data: data,
-        to,
-      }
+      transaction,
     };
     const createResult = await this._safeheronWeb3Api.createWeb3EthSignTransaction(request);
     console.log(`[${PLUGIN_NAME}]request eth_signTransaction success, please review and approve on safeheron mobile app`);
