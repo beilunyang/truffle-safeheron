@@ -25,7 +25,7 @@
   "license": "MIT",
   "homepage": "https://github.com/Safeheron/truffle-safeheron",
   "dependencies": {
-    "@safeheron/api-sdk": "^1.0.5",
+    "@safeheron/api-sdk": "^1.0.29",
     "ethereum-protocol": "^1.0.1",
     "uuid": "^9.0.1",
     "web3-provider-engine": "^17.0.0"
